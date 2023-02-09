@@ -6,14 +6,27 @@
       "author": "typicode"
     }
   ],
-  "comments": [
+  "Bookdata": [
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "id": 2,
+      "image_url": "https://m.media-amazon.com/images/I/5165He67NEL.jpg",
+      "book_name": "Harry potter",
+      "author": "rudyard kipling",
+      "genre": "Fiction",
+      "edition": "2020",
+      "publisher": "Pratik",
+      "cost": "200",
+      "borrowed": false
+    },
+    {
+      "id": 4,
+      "image_url": "https://m.media-amazon.com/images/I/5165He67NEL.jpg",
+      "book_name": "Harry potters",
+      "author": "rudyar kiplings",
+      "genre": "Action",
+      "edition": "2022",
+      "publisher": "mwiii",
+      "cost": "250"
     }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }

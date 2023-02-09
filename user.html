@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+   #Books-area{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: auto;
+   } 
+   .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+<body>
+    <h1>Books Display</h1>
+    <select name="" id="genre" onchange="filter()">
+        <option value="">Genre</option>
+        <option value="Sience">Science</option>
+        <option value="Fiction">Fiction</option>
+        <option value="History">History</option>
+        <option value="Tech">Tech</option>
+        <option value="Business">Business</option>
+        <option value="Action">Action</option>
+    </select>
+    <select name="" id="sorts" onchange="Sorting()">
+        <option value="">Sort</option>
+        <option value="asc">Low to high</option>
+        <option value="desc">High to low</option>
+    </select>
+    <div id="Books-area">
+
+    </div>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+      
+      </div>
+</body>
+<script>
+    function filter(){
+      var filters=document.getElementById('genre').value;
+      fetch(`http://localhost:3000/Bookdata`).then(res=>res.json()).then(res=>{
+        console.log(res)
+        arr3=res;
+        var filts=arr3.filter((elem)=>{
+            if(elem.genre==filters){
+                return elem;
+            }
+        })
+        document.getElementById("Books-area").innerHTML=""
+        Books(filts)
+    })
+    }
+    function Sorting(){
+       let sorts= document.getElementById('sorts').value;
+       fetch(`http://localhost:3000/Bookdata?_sort=cost&_order=${sorts}`).then(res=>res.json()).then(res=>{
+        document.getElementById("Books-area").innerHTML=""
+        Books(res)
+       })
+    }
+    fetch(`http://localhost:3000/Bookdata`).then(res=>res.json()).then(res=>{
+        console.log(res)
+        arr2=res;
+        Books(arr2)
+    })
+    function Books(arr2){
+        arr2.map((elem)=>{
+            var div=document.createElement('div');
+        var div2=document.createElement('div');
+        var div3=document.createElement('div');
+        image=document.createElement("img");
+        image.src="https://m.media-amazon.com/images/I/5165He67NEL.jpg";
+        image.style.width="90%"
+        div2.append(image);
+        title=document.createElement("h3");
+        title.innerText=elem.book_name;
+        var author=document.createElement("p");
+        author.innerText=`Author :${elem.author}`
+        var genre=document.createElement("p");
+        genre.innerText=`Genre :${elem.genre}`
+        var edition=document.createElement("p");
+        edition.innerText=`Edition :${elem.edition}`
+        var publisher=document.createElement('p');
+        publisher.innerText=`Publisher :${elem.publisher}`
+        var cost =document.createElement('p');
+        cost.innerText=`Cost :${elem.cost}`
+        var btn=document.createElement(`button`);
+        btn.innerText="Borrow";
+        btn.setAttribute("id","myBtn")
+        btn.style.backgroundColor="#66b600";
+        btn.style.color="white"
+        div3.append(title,author,genre,edition,publisher,cost,btn);
+        div.style.display="flex";
+        div.append(div2,div3)
+        document.getElementById('Books-area').append(div)
+        })
+        
+        
+         
+    }
+    var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+</html>

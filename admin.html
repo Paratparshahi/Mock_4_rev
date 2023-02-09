@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <label for="">Image</label><br><br>
+        <input type="url" placeholder="image" id="imagE"><br><br>
+        <label for="" >Book Name</label><br><br>
+        <input type="text" placeholder="book_name" id="book_namE"><br><br>
+        <label for="" >Author</label><br><br>
+        <input type="text" placeholder="author" id="authoR"><br><br>
+        <label for="" >Genre</label><br><br>
+        <input type="text" placeholder="Genre" id="genrE"><br><br>
+        <label for="" >Edition</label><br><br>
+        <input type="text" placeholder="edition" id="editioN"><br><br>
+        <label for="" >Publisher</label><br><br>
+        <input type="text" placeholder="Publisher" id="publisheR"><br><br>
+        <label for="" >Cost</label><br><br>
+        <input type="number" placeholder="cost" id="cosT"><br><br>
+        <button onclick="onSubmit()">Submit</button>
+    </form>
+    <h2>Table Data</h2>
+    <table id="table">
+        <tr>
+            <th>Id</th>
+            <th>Image</th>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Edition</th>
+            <th>Publisher</th>
+            <th>Cost</th>
+            <th>Edit</th>
+            <td>Delete</td>
+        </tr>
+        
+    </table>
+</body>
+<script>
+    function onSubmit(){
+        event.preventDefault()
+        image=document.getElementById('imagE').value;
+        book=document.getElementById('book_namE').value;
+        author=document.getElementById('authoR').value;
+        genre=document.getElementById('genrE').value;
+        edition=document.getElementById('editioN').value;
+        publisher=document.getElementById('publisheR').value;
+        cost=document.getElementById('cosT').value;
+        var length;
+        fetch(`http://localhost:3000/Bookdata`).then(res=>res.json()).then(res=>{
+            console.log(res);
+            length=res.length;
+        })
+        setTimeout(()=>{
+           console.log(length)
+           fetch(`http://localhost:3000/Bookdata`,{
+            method: "POST",
+           
+
+            body: JSON.stringify({
+                id:length+1,
+            image_url:image,
+            book_name:book,
+            author:author,
+            genre:genre,
+            edition:edition,
+            publisher:publisher,
+            cost:cost
+     }), 
+     headers: {
+         "Content-type": "application/json; charset=UTF-8"
+     }
+    }).then(res=>res.json()).then(res=>console.log(res))
+        },2000)
+        
+    }
+    fetch(`http://localhost:3000/Bookdata`).then(res=>res.json()).then(res=>{
+        console.log(res)
+        arr=res;
+        console.log(arr)
+        Table(arr)
+    })
+
+    function Table(arr){
+       arr.map((el,index)=>{
+        var tr=document.createElement('tr');
+        var id=document.createElement('td');
+        id.innerText=el.id;
+        var image=document.createElement('td');
+        image.innerText=el.image_url;
+        var book=document.createElement('td');
+        book.innerText=el.book_name;
+        var author=document.createElement('td');
+        author.innerText=el.author;
+        var genre=document.createElement('td');
+        genre.innerText=el.genre;
+        var edition=document.createElement('td');
+        edition.innerText=el.edition;
+        var publisher=document.createElement('td');
+        publisher.innerText=el.publisher;
+        var cost=document.createElement('td');
+        cost.innerText=el.cost;
+        var edit=document.createElement('td');
+        var but=document.createElement("button");
+        but.innerText="Edit";
+        
+        edit.append(but);
+        var deletes=document.createElement('td');
+        var butt=document.createElement("button");
+        butt.innerText="Delete";
+        butt.addEventListener("click",function (){
+            fetch(`http://localhost:3000/Bookdata/${el.id}`,{
+                method:"DELETE"
+            }).then(res=>res.json()).then(res=>{
+                console.log(res)
+            })
+        })
+
+        deletes.append(butt)
+        tr.append(id,image,book,author,genre,edition,publisher,cost,edit,butt);
+        document.getElementById("table").append(tr);
+       })
+    }
+</script>
+</html>
